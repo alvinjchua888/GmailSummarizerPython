@@ -3,7 +3,7 @@ Email Summarizer Module
 Generates summaries of email content using AI.
 """
 
-import openai
+from openai import OpenAI
 from typing import Optional
 
 
@@ -20,7 +20,7 @@ class EmailSummarizer:
         """
         self.api_key = api_key
         self.model = model
-        openai.api_key = api_key
+        self.client = OpenAI(api_key=api_key)
     
     def summarize(self, email_body: str, max_length: int = 150) -> str:
         """
@@ -43,7 +43,7 @@ class EmailSummarizer:
         try:
             prompt = self._create_prompt(email_body, max_length)
             
-            response = openai.ChatCompletion.create(
+            response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
                     {
